@@ -1,0 +1,128 @@
+#SVMReadme {
+	position: absolute;
+	top: 10px;
+	left: 50%;
+	border-style: solid;
+	border-width: 3px;
+	border-color: rgb(255, 255, 255);
+	height: 11px;
+	width: 11px;
+	background-color: rgb(255, 0, 0);
+	outline-style: solid;
+	outline-width: 3px;
+	outline-color: rgb(255, 0, 0);
+}
+
+#SVMTrainButton {
+	position: absolute;
+	top: 14px;
+	left: 60px;
+	padding-left: 3px;
+	padding-right: 3px;
+	color: rgb(250, 250, 250);
+	background-color: rgba(0, 0, 0, 0.7);
+	border-style: solid;
+	border-width: 2px;
+	border-color: rgba(250, 250, 250, 0.7);
+	font-size: 24px;
+	cursor: pointer;
+}
+
+#SVMResetButton {
+	position: absolute;
+	top: 14px;
+	left: 140px;
+	padding-left: 3px;
+	padding-right: 3px;
+	color: rgb(250, 250, 250);
+	background-color: rgba(0, 0, 0, 0.7);
+	border-style: solid;
+	border-width: 2px;
+	border-color: rgba(250, 250, 250, 0.7);
+	font-size: 24px;
+	cursor: pointer;
+}
+
+#SVMStartButton {
+	position: absolute;
+	top: 14px;
+	left: 200px;
+	padding-left: 3px;
+	padding-right: 3px;
+	color: rgb(250, 250, 250);
+	background-color: rgba(0, 0, 0, 0.7);
+	border-style: solid;
+	border-width: 2px;
+	border-color: rgba(250, 250, 250, 0.7);
+	font-size: 24px;
+	cursor: pointer;
+}
+
+#SVMTimeCounterLabel {
+	position: absolute;
+	top: 60px;
+	left: 30px;
+	width: 30px;
+	color: rgb(250, 250, 250);
+	background-color: rgba(0, 0, 0, 0.7);
+	border: 0;
+	font-size: 18px;
+}
+#SVMTimeCounter {
+	position: absolute;
+	top: 60px;
+	left: 70px;
+	width: 80px;
+	color: rgb(250, 250, 250);
+	background-color: rgba(0, 0, 0, 0.7);
+	border-style: solid;
+	border-width: 2px;
+	border-color: rgba(250, 250, 250, 0.7);
+	font-size: 18px;
+}
+
+#SVMCellsRowLabel {
+	position: absolute;
+	top: 60px;
+	left: 205px;
+	width: 50px;
+	color: rgb(250, 250, 250);
+	background-color: rgba(0, 0, 0, 0.7);
+	border: 0;
+	font-size: 18px;
+}
+#SVMCellsRow {
+	position: absolute;
+	top: 60px;
+	left: 255px;
+	width: 40px;
+	color: rgb(250, 250, 250);
+	background-color: rgba(0, 0, 0, 0.7);
+	border-style: solid;
+	border-width: 2px;
+	border-color: rgba(250, 250, 250, 0.7);
+	font-size: 18px;
+}
+#SVMCellsColLabel {
+	position: absolute;
+	top: 60px;
+	left: 310px;
+	width: 60px;
+	color: rgb(250, 250, 250);
+	background-color: rgba(0, 0, 0, 0.7);
+	border: 0;
+	font-size: 18px;
+}
+#SVMCellsCol {
+	position: absolute;
+	top: 60px;
+	left: 370px;
+	width: 40px;
+	color: rgb(250, 250, 250);
+	background-color: rgba(0, 0, 0, 0.7);
+	border-style: solid;
+	border-width: 2px;
+	border-color: rgba(250, 250, 250, 0.7);
+	font-size: 18px;
+}
+
