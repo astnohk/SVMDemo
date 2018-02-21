@@ -137,6 +137,7 @@
 	border-style: solid;
 	border-width: 2px;
 	border-color: rgba(150, 150, 150, 0.7);
+	outline: 0;
 	font-size: 9px;
 }
 

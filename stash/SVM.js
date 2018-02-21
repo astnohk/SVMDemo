@@ -2,11 +2,17 @@
 "use strict";
 
 class Console {
-	constructor(Screen)
+	constructor()
 	{
-		this.screen = Screen;
+		this.screen = document.createElement("textarea");
+		this.screen.disabled = true;
 		this.lines = [];
 		this.lineMax = 100;
+	}
+
+	getElement()
+	{
+		return this.screen;
 	}
 
 	write(text)
@@ -19,7 +25,7 @@ class Console {
 		for (let l = 0; l < this.lines.length; l++) {
 			display = display + this.lines[this.lines.length - 1 - l] + "\n";
 		}
-		this.screen.innerText = display;
+		this.screen.innerHTML = display;
 	}
 }
 
@@ -143,11 +149,11 @@ class SVM {
 		this.inputNumLabel.id = "SVMDataNumLabel";
 		this.rootWindow.appendChild(this.inputNumLabel);
 
-		this.screen = document.createElement("div");
-		this.screen.id = "SVMConsole";
-		this.screen.innerHTML = ">";
-		this.rootWindow.appendChild(this.screen);
+		// Init console
 		this.console = new Console(this.screen);
+		this.screen = this.console.getElement();
+		this.screen.id = "SVMConsole";
+		this.rootWindow.appendChild(this.screen);
 
 		this.prepareCanvas();
 	}
