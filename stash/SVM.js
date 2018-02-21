@@ -85,6 +85,7 @@ class SVM {
 
 	reinit()
 	{
+		this.console.write("Reset");
 		// Initialize
 		this.initField();
 		this.initSVM();
@@ -216,6 +217,11 @@ class SVM {
 	trainEnable(e)
 	{
 		this.trainEnabled = (this.trainEnabled + 1) % 2;
+		if (this.trainEnabled) {
+			this.console.write("Training start");
+		} else {
+			this.console.write("Training stop");
+		}
 	}
 
 
@@ -235,6 +241,7 @@ class SVM {
 				this.addTrainingData([x + w_x, y + w_y], -1);
 			}
 		}
+		this.console.write("Add random data");
 	}
 
 	addTrainingData(x, c)
