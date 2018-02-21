@@ -1,8 +1,31 @@
 // The code written in BSD/KNF indent style
 "use strict";
 
+class Console {
+	constructor(Screen)
+	{
+		this.screen = Screen;
+		this.lines = [];
+		this.lineMax = 100;
+	}
+
+	write(text)
+	{
+		this.lines.push(text);
+		if (this.lines.length > this.lineMax) {
+			this.lines.shift();
+		}
+		let display = "";
+		for (let l = 0; l < this.lines.length; l++) {
+			display = display + this.lines[this.lines.length - 1 - l] + "\n";
+		}
+		this.screen.innerText = display;
+	}
+}
+
 class SVM {
-	constructor(windowSystemRoot, rootWindow) {
+	constructor(windowSystemRoot, rootWindow)
+	{
 		this.SysRoot = windowSystemRoot;
 		this.rootWindow = rootWindow;
 		this.rootWindow.style.overflow = "hidden";
@@ -16,7 +39,10 @@ class SVM {
 		this.dataNumLabel = null;
 		this.inputNum = null;
 		this.inputNumLabel = null;
+		this.screen = null;
 		this.canvas = null;
+
+		this.console = null;
 
 		this.context = null;
 		this.canvasSize = {width: 600, height: 600};
@@ -116,6 +142,12 @@ class SVM {
 		this.inputNumLabel.id = "SVMDataNumLabel";
 		this.rootWindow.appendChild(this.inputNumLabel);
 
+		this.screen = document.createElement("div");
+		this.screen.id = "SVMConsole";
+		this.screen.innerHTML = ">";
+		this.rootWindow.appendChild(this.screen);
+		this.console = new Console(this.screen);
+
 		this.prepareCanvas();
 	}
 
@@ -190,14 +222,18 @@ class SVM {
 	// ----- SVM -----
 	addRandomTrainingData()
 	{
-		let r_x = Math.random() * 30 - 15;
-		let r_y = Math.random() * 30 - 15;
-		let v_x = Math.random() - 0.5;
-		let v_y = Math.random() - 0.5;
+		let v_x = (Math.random() - 0.5) * 60;
+		let v_y = (Math.random() - 0.5) * 60;
+		let w_x = (Math.random() - 0.5) * 60;
+		let w_y = (Math.random() - 0.5) * 60;
 		for (let i = 0; i < 130; i++) {
-			let x = Math.random() * 40 - 20 * Math.random();
-			let y = Math.random() * 40 - 20 * Math.random();
-			this.addTrainingData([x, y], (x - r_x) * v_x + (y - r_y) * v_y > 0 ? 1 : -1);
+			let x = (Math.random() - 0.5) * 30 - 10 * Math.random();
+			let y = (Math.random() - 0.5) * 30 - 10 * Math.random();
+			if (Math.random() - 0.5 > 0) {
+				this.addTrainingData([x + v_x, y + v_y], 1);
+			} else {
+				this.addTrainingData([x + w_x, y + w_y], -1);
+			}
 		}
 	}
 
