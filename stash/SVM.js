@@ -45,6 +45,13 @@ class SVM {
 		this.dataNumLabel = null;
 		this.inputNum = null;
 		this.inputNumLabel = null;
+		this.parameterDispBox = null;
+		this.weight0Disp = null;
+		this.weight1Disp = null;
+		this.biasDisp = null;
+		this.betaDisp = null;
+		this.diffDisp = null;
+		this.constraintDisp = null;
 		this.screen = null;
 		this.canvas = null;
 
@@ -54,13 +61,16 @@ class SVM {
 		this.canvasSize = {width: 600, height: 600};
 		this.canvasOffset = {top: 120, left: 70};
 		this.plotOffset = {x: this.canvasSize.width / 2, y: this.canvasSize.height / 2};
-		this.plotScale = 4.0;
+		this.plotScale = 1.0;
 
 		this.data = [];
 		this.input = []; // data which is not used for training
 		this.weight = [];
 		this.bias = 0;
 		this.lambda = [];
+		this.beta = 0;
+		this.diff = 0;
+		this.constraint = 0;
 		this.trainEnabled = 0;
 
 		this.loopInterval = null;
@@ -149,6 +159,83 @@ class SVM {
 		this.inputNumLabel.id = "SVMDataNumLabel";
 		this.rootWindow.appendChild(this.inputNumLabel);
 
+		// Parameter Display
+		this.parameterDispBox = document.createElement("div");
+		this.parameterDispBox.id = "SVMParameterDispBox";
+		this.rootWindow.appendChild(this.parameterDispBox);
+
+		// weight[0]
+		this.weight0Label = document.createElement("div");
+		this.weight0Label.className = "SVMParameterLabel";
+		this.weight0Label.id = "SVMWeight0Label";
+		this.weight0Label.innerHTML = "w0";
+		this.parameterDispBox.appendChild(this.weight0Label);
+
+		this.weight0Disp = document.createElement("div");
+		this.weight0Disp.className = "SVMParameterDisp";
+		this.weight0Disp.id = "SVMWeight0Disp";
+		this.parameterDispBox.appendChild(this.weight0Disp);
+
+		// weight[1]
+		this.weight1Label = document.createElement("div");
+		this.weight1Label.className = "SVMParameterLabel";
+		this.weight1Label.id = "SVMWeight1Label";
+		this.weight1Label.innerHTML = "w1";
+		this.parameterDispBox.appendChild(this.weight1Label);
+
+		this.weight1Disp = document.createElement("div");
+		this.weight1Disp.className = "SVMParameterDisp";
+		this.weight1Disp.id = "SVMWeight1Disp";
+		this.parameterDispBox.appendChild(this.weight1Disp);
+
+		// bias
+		this.biasLabel = document.createElement("div");
+		this.biasLabel.className = "SVMParameterLabel";
+		this.biasLabel.id = "SVMBiasLabel";
+		this.biasLabel.innerHTML = "b";
+		this.parameterDispBox.appendChild(this.biasLabel);
+
+		this.biasDisp = document.createElement("div");
+		this.biasDisp.className = "SVMParameterDisp";
+		this.biasDisp.id = "SVMBiasDisp";
+		this.parameterDispBox.appendChild(this.biasDisp);
+
+		// beta
+		this.betaLabel = document.createElement("div");
+		this.betaLabel.className = "SVMParameterLabel";
+		this.betaLabel.id = "SVMBetaLabel";
+		this.betaLabel.innerHTML = "beta";
+		this.parameterDispBox.appendChild(this.betaLabel);
+
+		this.betaDisp = document.createElement("div");
+		this.betaDisp.className = "SVMParameterDisp";
+		this.betaDisp.id = "SVMBetaDisp";
+		this.parameterDispBox.appendChild(this.betaDisp);
+
+		// diff
+		this.diffLabel = document.createElement("div");
+		this.diffLabel.className = "SVMParameterLabel";
+		this.diffLabel.id = "SVMDiffLabel";
+		this.diffLabel.innerHTML = "diff";
+		this.parameterDispBox.appendChild(this.diffLabel);
+
+		this.diffDisp = document.createElement("div");
+		this.diffDisp.className = "SVMParameterDisp";
+		this.diffDisp.id = "SVMDiffDisp";
+		this.parameterDispBox.appendChild(this.diffDisp);
+
+		// lambda_constraint
+		this.constraintLabel = document.createElement("div");
+		this.constraintLabel.className = "SVMParameterLabel";
+		this.constraintLabel.id = "SVMConstraintLabel";
+		this.constraintLabel.innerHTML = "constraint";
+		this.parameterDispBox.appendChild(this.constraintLabel);
+
+		this.constraintDisp = document.createElement("div");
+		this.constraintDisp.className = "SVMParameterDisp";
+		this.constraintDisp.id = "SVMConstraintDisp";
+		this.parameterDispBox.appendChild(this.constraintDisp);
+
 		// Init console
 		this.console = new Console(this.screen);
 		this.screen = this.console.getElement();
@@ -234,13 +321,13 @@ class SVM {
 	// ----- SVM -----
 	addRandomTrainingData()
 	{
-		let v_x = (Math.random() - 0.5) * 60;
-		let v_y = (Math.random() - 0.5) * 60;
-		let w_x = (Math.random() - 0.5) * 60;
-		let w_y = (Math.random() - 0.5) * 60;
-		for (let i = 0; i < 130; i++) {
-			let x = (Math.random() - 0.5) * 30 - 10 * Math.random();
-			let y = (Math.random() - 0.5) * 30 - 10 * Math.random();
+		let v_x = (Math.random() - 0.5) * 200;
+		let v_y = (Math.random() - 0.5) * 200;
+		let w_x = (Math.random() - 0.5) * 200;
+		let w_y = (Math.random() - 0.5) * 200;
+		for (let i = 0; i < 60; i++) {
+			let x = (Math.random() - 0.5) * 100 - 30 * Math.random();
+			let y = (Math.random() - 0.5) * 100 - 30 * Math.random();
 			if (Math.random() - 0.5 > 0) {
 				this.addTrainingData([x + v_x, y + v_y], 1);
 			} else {
@@ -270,12 +357,13 @@ class SVM {
 
 	train()
 	{
-		let eta = 0.001 / this.data.length;
-		let diff = 0;
+		//let eta = 0.0001 / this.data.length;
 		if (this.lambda == null || this.lambda.length != this.data.length) {
 			this.initLambda();
+			this.beta = 1.0;
 		}
 		let lambda_new = new Array(this.data.length);
+		let eta = 0.0002 / this.data.length;
 		for (let i = 0; i < this.data.length; i++) {
 			let sum = 0;
 			let sum2 = 0;
@@ -287,29 +375,60 @@ class SVM {
 				sum += this.lambda[j] * this.data[i].c * this.data[j].c * x;
 				sum2 += this.lambda[j] * this.data[i].c * this.data[j].c;
 			}
-			lambda_new[i] = this.lambda[i] + eta * (1 - 0.5 * sum - 0.5 * sum2);
+			//lambda_new[i] = this.lambda[i] + eta * (1.0 - this.beta * 0.5 * sum - (1.0 - this.beta) * 0.5 * sum2);
+			lambda_new[i] = this.lambda[i] + eta * (1.0 - 0.5 * sum);
+		}
+		let iprod = 0;
+		for (let i = 0; i < this.data.length; i++) {
+			iprod += lambda_new[i] * this.data[i].c;
 		}
 		for (let i = 0; i < this.data.length; i++) {
-			diff += Math.abs(lambda_new[i] - this.lambda[i]);
+			lambda_new[i] -= 0.01 * this.data[i].c * iprod;
+		}
+		this.beta *= 0.999;
+		if (this.beta < 0.1) {
+			this.beta = 0.1;
+		}
+		this.diff = 0;
+		for (let i = 0; i < this.data.length; i++) {
+			this.diff += Math.abs(lambda_new[i] - this.lambda[i]);
 			this.lambda[i] = lambda_new[i];
 			if (this.lambda[i] < 0) {
-				//this.lambda[i] = 0;
+				this.lambda[i] = 0;
 			}
-			//console.log("lambda[" + i + "]: " + this.lambda[i]);
 		}
-		let cond = 0;
+
+		this.constraint = 0;
+		let index_lambda_max = 0;
+		let index_lambda_nextmax = 0;
 		for (let i = 0; i < this.data.length; i++) {
-			cond += this.lambda[i] * this.data[i].c;
+			if (this.lambda[i] > this.lambda[index_lambda_max]) {
+				index_lambda_nextmax = index_lambda_max;
+				index_lambda_max = i;
+			}
+			this.constraint += this.lambda[i] * this.data[i].c;
 		}
-		console.log({lambda_c: cond});
-		console.log(diff);
+		this.bias = 0;
 		for (let n = 0; n < this.dim; n++) {
 			this.weight[n] = 0;
 			for (let i = 0; i < this.data.length; i++) {
 				this.weight[n] += this.lambda[i] * this.data[i].c * this.data[i].x[n];
 			}
+			this.bias += 0.5 * this.weight[n] * this.data[index_lambda_max].x[n];
+			this.bias += 0.5 * this.weight[n] * this.data[index_lambda_nextmax].x[n];
 		}
-		console.log({w0: this.weight[0], w1: this.weight[1]});
+		this.bias -= 0.5 * (this.data[index_lambda_max].c + this.data[index_lambda_nextmax].c);
+		this.parameterDisp();
+	}
+
+	parameterDisp()
+	{
+		this.weight0Disp.innerHTML = this.weight[0];
+		this.weight1Disp.innerHTML = this.weight[1];
+		this.biasDisp.innerHTML = this.bias;
+		this.betaDisp.innerHTML = this.beta;
+		this.diffDisp.innerHTML = this.diff;
+		this.constraintDisp.innerHTML = this.constraint;
 	}
 
 
@@ -337,6 +456,20 @@ class SVM {
 		this.context.lineTo(
 		    this.plotOffset.x + 10 * this.plotScale * this.weight[0],
 		    this.plotOffset.y - 10 * this.plotScale * this.weight[1]);
+		this.context.stroke();
+
+		// Draw g(x) == 0
+		let norm = Math.sqrt(this.weight[0] * this.weight[0] + this.weight[1] * this.weight[1]);
+		let v_zero = [this.weight[0] * this.bias / norm / norm, this.weight[1] * this.bias / norm / norm];
+		let v_norm = [-this.weight[1] / norm, this.weight[0] / norm];
+		this.context.strokeStyle = "rgb(0, 0, 255)";
+		this.context.beginPath();
+		this.context.moveTo(
+		    this.plotOffset.x + (v_zero[0] + 200 * v_norm[0]) * this.plotScale,
+		    this.plotOffset.y + -(v_zero[1] + 200 * v_norm[1]) * this.plotScale);
+		this.context.lineTo(
+		    this.plotOffset.x + (v_zero[0] - 200 * v_norm[0]) * this.plotScale,
+		    this.plotOffset.y + -(v_zero[1] - 200 * v_norm[1]) * this.plotScale);
 		this.context.stroke();
 
 		// Plot data
