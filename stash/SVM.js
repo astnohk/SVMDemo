@@ -64,6 +64,7 @@ class SVM {
 		this.plotScale = 1.0;
 
 		this.data = [];
+		this.supportVectors = [];
 		this.input = []; // data which is not used for training
 		this.weight = [];
 		this.bias = 0;
@@ -386,15 +387,15 @@ class SVM {
 			lambda_new[i] -= 0.01 * this.data[i].c * iprod;
 		}
 		this.beta *= 0.999;
-		if (this.beta < 0.1) {
-			this.beta = 0.1;
+		if (this.beta < 0.01) {
+			this.beta = 0.01;
 		}
 		this.diff = 0;
 		for (let i = 0; i < this.data.length; i++) {
 			this.diff += Math.abs(lambda_new[i] - this.lambda[i]);
 			this.lambda[i] = lambda_new[i];
 			if (this.lambda[i] < 0) {
-				this.lambda[i] = 0;
+				this.lambda[i] *= 0.1;
 			}
 		}
 
@@ -414,10 +415,13 @@ class SVM {
 			for (let i = 0; i < this.data.length; i++) {
 				this.weight[n] += this.lambda[i] * this.data[i].c * this.data[i].x[n];
 			}
-			this.bias += 0.5 * this.weight[n] * this.data[index_lambda_max].x[n];
-			this.bias += 0.5 * this.weight[n] * this.data[index_lambda_nextmax].x[n];
+			//this.bias += this.weight[n] * this.data[index_lambda_max].x[n];
+			this.bias += 0.5 * this.weight[n]
+			    * (this.data[index_lambda_max].x[n] + this.data[index_lambda_nextmax].x[n]);
 		}
+		//this.bias -= this.data[index_lambda_max].c;
 		this.bias -= 0.5 * (this.data[index_lambda_max].c + this.data[index_lambda_nextmax].c);
+		this.supportVectors = [index_lambda_max, index_lambda_nextmax];
 		this.parameterDisp();
 	}
 
@@ -493,6 +497,16 @@ class SVM {
 			    this.plotOffset.x + this.plotScale * this.input[i].x[0],
 			    this.plotOffset.y - this.plotScale * this.input[i].x[1],
 			    1, 0, 2 * Math.PI, false);
+			this.context.stroke();
+		}
+		// Draw circle on Support Vectors
+		for (let i = 0; i < this.supportVectors.length; i++) {
+			this.context.strokeStyle = "rgb(255, 255, 0)";
+			this.context.beginPath();
+			this.context.arc(
+			    this.plotOffset.x + this.plotScale * this.data[this.supportVectors[i]].x[0],
+			    this.plotOffset.y - this.plotScale * this.data[this.supportVectors[i]].x[1],
+			    3, 0, 2 * Math.PI, false);
 			this.context.stroke();
 		}
 	}
