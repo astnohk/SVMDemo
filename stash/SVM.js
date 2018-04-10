@@ -70,6 +70,7 @@ class SVM {
 		this.bias = 0;
 		this.lambda = [];
 		this.beta = 0;
+		this.betaMin = 0.01;
 		this.diff = 0;
 		this.constraint = 0;
 		this.trainEnabled = 0;
@@ -352,7 +353,7 @@ class SVM {
 	{
 		this.lambda = new Array(this.data.length);
 		for (let i = 0; i < this.data.length; i++) {
-			this.lambda[i] = 0.1;
+			this.lambda[i] = (0.5 + 0.5 * Math.random()) / this.data.length;
 		}
 	}
 
@@ -361,7 +362,7 @@ class SVM {
 		//let eta = 0.0001 / this.data.length;
 		if (this.lambda == null || this.lambda.length != this.data.length) {
 			this.initLambda();
-			this.beta = 1.0;
+			this.beta = 0.5;
 		}
 		let lambda_new = new Array(this.data.length);
 		let eta = 0.0002 / this.data.length;
@@ -376,8 +377,8 @@ class SVM {
 				sum += this.lambda[j] * this.data[i].c * this.data[j].c * x;
 				sum2 += this.lambda[j] * this.data[i].c * this.data[j].c;
 			}
-			//lambda_new[i] = this.lambda[i] + eta * (1.0 - this.beta * 0.5 * sum - (1.0 - this.beta) * 0.5 * sum2);
-			lambda_new[i] = this.lambda[i] + eta * (1.0 - 0.5 * sum);
+			lambda_new[i] = this.lambda[i] + eta * (1.0 - (1.0 - this.beta) * 0.5 * sum - this.beta * 0.5 * sum2);
+			//lambda_new[i] = this.lambda[i] + eta * (1.0 - 0.5 * sum);
 		}
 		let iprod = 0;
 		for (let i = 0; i < this.data.length; i++) {
@@ -386,16 +387,16 @@ class SVM {
 		for (let i = 0; i < this.data.length; i++) {
 			lambda_new[i] -= 0.01 * this.data[i].c * iprod;
 		}
-		this.beta *= 0.999;
-		if (this.beta < 0.01) {
-			this.beta = 0.01;
+		this.beta *= 0.998;
+		if (this.beta < this.betaMin) {
+			this.beta = this.betaMin;
 		}
 		this.diff = 0;
 		for (let i = 0; i < this.data.length; i++) {
 			this.diff += Math.abs(lambda_new[i] - this.lambda[i]);
 			this.lambda[i] = lambda_new[i];
 			if (this.lambda[i] < 0) {
-				this.lambda[i] *= 0.1;
+				this.lambda[i] = 1E-6;
 			}
 		}
 
