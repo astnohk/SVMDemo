@@ -1,34 +1,6 @@
 // The code written in BSD/KNF indent style
 "use strict";
 
-class Console {
-	constructor()
-	{
-		this.screen = document.createElement("textarea");
-		this.screen.disabled = true;
-		this.lines = [];
-		this.lineMax = 100;
-	}
-
-	getElement()
-	{
-		return this.screen;
-	}
-
-	write(text)
-	{
-		this.lines.push(text);
-		if (this.lines.length > this.lineMax) {
-			this.lines.shift();
-		}
-		let display = "";
-		for (let l = 0; l < this.lines.length; l++) {
-			display = display + this.lines[this.lines.length - 1 - l] + "\n";
-		}
-		this.screen.innerHTML = display;
-	}
-}
-
 class SVM {
 	constructor(windowSystemRoot, rootWindow)
 	{
@@ -323,13 +295,14 @@ class SVM {
 	// ----- SVM -----
 	addRandomTrainingData()
 	{
-		let v_x = (Math.random() - 0.5) * 200;
-		let v_y = (Math.random() - 0.5) * 200;
-		let w_x = (Math.random() - 0.5) * 200;
-		let w_y = (Math.random() - 0.5) * 200;
+		let coeff = 100.0;
+		let v_x = (Math.random() - 0.5) * coeff;
+		let v_y = (Math.random() - 0.5) * coeff;
+		let w_x = (Math.random() - 0.5) * coeff;
+		let w_y = (Math.random() - 0.5) * coeff;
 		for (let i = 0; i < 60; i++) {
-			let x = (Math.random() - 0.5) * 100 - 30 * Math.random();
-			let y = (Math.random() - 0.5) * 100 - 30 * Math.random();
+			let x = (Math.random() - 0.5) * 0.5 * coeff;
+			let y = (Math.random() - 0.5) * 0.5 * coeff;
 			if (Math.random() - 0.5 > 0) {
 				this.addTrainingData([x + v_x, y + v_y], 1);
 			} else {
@@ -362,7 +335,7 @@ class SVM {
 		//let eta = 0.0001 / this.data.length;
 		if (this.lambda == null || this.lambda.length != this.data.length) {
 			this.initLambda();
-			this.beta = 0.5;
+			this.beta = 0.8;
 		}
 		let lambda_new = new Array(this.data.length);
 		let eta = 0.0002 / this.data.length;
@@ -378,6 +351,7 @@ class SVM {
 				sum2 += this.lambda[j] * this.data[i].c * this.data[j].c;
 			}
 			lambda_new[i] = this.lambda[i] + eta * (1.0 - (1.0 - this.beta) * 0.5 * sum - this.beta * 0.5 * sum2);
+			//lambda_new[i] = this.lambda[i] + eta * (1.0 - (1.0 - this.beta) * sum - this.beta * sum2);
 			//lambda_new[i] = this.lambda[i] + eta * (1.0 - 0.5 * sum);
 		}
 		let iprod = 0;
@@ -465,7 +439,9 @@ class SVM {
 
 		// Draw g(x) == 0
 		let norm = Math.sqrt(this.weight[0] * this.weight[0] + this.weight[1] * this.weight[1]);
-		let v_zero = [this.weight[0] * this.bias / norm / norm, this.weight[1] * this.bias / norm / norm];
+		let v_zero = [
+			this.weight[0] * this.bias / norm / norm,
+			this.weight[1] * this.bias / norm / norm];
 		let v_norm = [-this.weight[1] / norm, this.weight[0] / norm];
 		this.context.strokeStyle = "rgb(0, 0, 255)";
 		this.context.beginPath();

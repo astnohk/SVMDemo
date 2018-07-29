@@ -1,3 +1,6 @@
 [submodule "ECMASystem7"]
 	path = ECMASystem7
 	url = https://github.com/astnohk/ECMASystem7.git
+[submodule "ECMALibs"]
+	path = ECMALibs
+	url = https://github.com/astnohk/ECMALibs.git
