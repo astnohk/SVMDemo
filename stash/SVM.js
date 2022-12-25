@@ -361,15 +361,14 @@ class SVM {
 		for (let i = 0; i < this.data.length; i++) {
 			lambda_new[i] -= 0.01 * this.data[i].c * iprod;
 		}
-		this.beta *= 0.998;
+		this.beta *= 0.999;
 		this.beta = Math.max(this.betaMin, this.beta);
 		this.diff = 0;
 		for (let i = 0; i < this.data.length; i++) {
 			this.diff += Math.abs(lambda_new[i] - this.lambda[i]);
 			this.lambda[i] = lambda_new[i];
 			if (this.lambda[i] < 0) {
-				//this.lambda[i] = 1E-6;
-				this.lambda[i] = Math.abs(this.lambda[i]);
+				this.lambda[i] = 0;
 			}
 		}
 
