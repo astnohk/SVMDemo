@@ -368,7 +368,8 @@ class SVM {
 			this.diff += Math.abs(lambda_new[i] - this.lambda[i]);
 			this.lambda[i] = lambda_new[i];
 			if (this.lambda[i] < 0) {
-				this.lambda[i] = 1E-6;
+				//this.lambda[i] = 1E-6;
+				this.lambda[i] = Math.abs(this.lambda[i]);
 			}
 		}
 
