@@ -378,7 +378,7 @@ class SVM {
 		for (let i = 0; i < this.data.length; i++) {
 			if (this.lambda[i] > this.lambda[index_lambda_max]) {
                 // Check next_max
-                if (this.lambda[index_lambda_max] > this.lambda[index_lambda_next_max]) {
+                if (this.lambda[index_lambda_max] > this.lambda[index_lambda_nextmax]) {
                     index_lambda_nextmax = index_lambda_max;
                 }
 				index_lambda_max = i;
