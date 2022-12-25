@@ -373,15 +373,18 @@ class SVM {
 		}
 
 		this.constraint = 0;
-		let index_lambda_max = 0;
-		let index_lambda_nextmax = 0;
+		let index_lambda_max_c0 = -1;
+		let index_lambda_max_c1 = -1;
 		for (let i = 0; i < this.data.length; i++) {
-			if (this.lambda[i] > this.lambda[index_lambda_max]) {
-                // Check next_max
-                if (this.lambda[index_lambda_max] > this.lambda[index_lambda_nextmax]) {
-                    index_lambda_nextmax = index_lambda_max;
-                }
-				index_lambda_max = i;
+			if (this.data[i].c > 0 &&
+                (index_lambda_max_c0 < 0 || this.lambda[i] > this.lambda[index_lambda_max_c0])
+            ) {
+				index_lambda_max_c0 = i;
+			}
+			if (this.data[i].c < 0 &&
+                (index_lambda_max_c1 < 0 || this.lambda[i] > this.lambda[index_lambda_max_c1])
+            ) {
+				index_lambda_max_c1 = i;
 			}
 			this.constraint += this.lambda[i] * this.data[i].c;
 		}
@@ -391,13 +394,13 @@ class SVM {
 			for (let i = 0; i < this.data.length; i++) {
 				this.weight[n] += this.lambda[i] * this.data[i].c * this.data[i].x[n];
 			}
-			//this.bias += this.weight[n] * this.data[index_lambda_max].x[n];
+			//this.bias += this.weight[n] * this.data[index_lambda_max_c0].x[n];
 			this.bias += 0.5 * this.weight[n]
-			    * (this.data[index_lambda_max].x[n] + this.data[index_lambda_nextmax].x[n]);
+			    * (this.data[index_lambda_max_c0].x[n] + this.data[index_lambda_max_c1].x[n]);
 		}
-		//this.bias -= this.data[index_lambda_max].c;
-		this.bias -= 0.5 * (this.data[index_lambda_max].c + this.data[index_lambda_nextmax].c);
-		this.supportVectors = [index_lambda_max, index_lambda_nextmax];
+		//this.bias -= this.data[index_lambda_max_c0].c;
+		this.bias -= 0.5 * (this.data[index_lambda_max_c0].c + this.data[index_lambda_max_c1].c);
+		this.supportVectors = [index_lambda_max_c0, index_lambda_max_c1];
 		this.parameterDisp();
 	}
 
