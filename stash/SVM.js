@@ -455,11 +455,17 @@ class SVM {
 		this.context.stroke();
 
 		// Plot data
+        const lambdaMax = !!this.lambda ? Math.max(...this.lambda) : 1.0;
 		for (let i = 0; i < this.data.length; i++) {
+            let alpha = 1.0;
+            if (!!this.lambda && i < this.lambda.length) {
+                const C = 0.1;
+                alpha = C + (1.0 - C) * this.lambda[i] / lambdaMax;
+            }
 			if (this.data[i].c > 0) {
-				this.context.strokeStyle = "rgb(255, 0, 0)";
+				this.context.strokeStyle = `rgba(255,0,0, ${alpha})`;
 			} else {
-				this.context.strokeStyle = "rgb(0, 255, 0)";
+				this.context.strokeStyle = `rgba(0,255,0, ${alpha})`;
 			}
 			this.context.beginPath();
 			this.context.arc(
