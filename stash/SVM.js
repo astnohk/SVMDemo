@@ -362,9 +362,7 @@ class SVM {
 			lambda_new[i] -= 0.01 * this.data[i].c * iprod;
 		}
 		this.beta *= 0.998;
-		if (this.beta < this.betaMin) {
-			this.beta = this.betaMin;
-		}
+		this.beta = Math.max(this.betaMin, this.beta);
 		this.diff = 0;
 		for (let i = 0; i < this.data.length; i++) {
 			this.diff += Math.abs(lambda_new[i] - this.lambda[i]);
@@ -379,7 +377,10 @@ class SVM {
 		let index_lambda_nextmax = 0;
 		for (let i = 0; i < this.data.length; i++) {
 			if (this.lambda[i] > this.lambda[index_lambda_max]) {
-				index_lambda_nextmax = index_lambda_max;
+                // Check next_max
+                if (this.lambda[index_lambda_max] > this.lambda[index_lambda_next_max]) {
+                    index_lambda_nextmax = index_lambda_max;
+                }
 				index_lambda_max = i;
 			}
 			this.constraint += this.lambda[i] * this.data[i].c;
