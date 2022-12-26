@@ -466,16 +466,16 @@ class SVM {
                 alpha = C + (1.0 - C) * this.lambda[i] / lambdaMax;
             }
 			if (this.data[i].c > 0) {
-				this.context.strokeStyle = `rgba(255,0,0, ${alpha})`;
+				this.context.fillStyle = `rgba(255,0,0, ${alpha})`;
 			} else {
-				this.context.strokeStyle = `rgba(0,255,0, ${alpha})`;
+				this.context.fillStyle = `rgba(0,255,0, ${alpha})`;
 			}
 			this.context.beginPath();
 			this.context.arc(
 			    this.plotOffset.x + this.plotScale * this.data[i].x[0],
 			    this.plotOffset.y - this.plotScale * this.data[i].x[1],
 			    1, 0, 2 * Math.PI, false);
-			this.context.stroke();
+			this.context.fill();
 		}
 		for (let i = 0; i < this.input.length; i++) {
 			this.context.strokeStyle = "rgb(0, 0, 255)";
