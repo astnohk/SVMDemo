@@ -48,6 +48,7 @@ class SVM {
 		this.trainEnabled = 0;
 
 		this.loopInterval = null;
+        this.timeCount = 0;
 
 		// Initialize
 		this.init();
@@ -77,6 +78,7 @@ class SVM {
 	{
 		this.console.write("Reset");
 		// Initialize
+        this.timeCount = 0;
 		this.initField();
 		this.initSVM();
 
@@ -113,25 +115,25 @@ class SVM {
 		this.timeCounterLabel.id = "SVMTimeCounterLabel";
 		this.rootWindow.appendChild(this.timeCounterLabel);
 
-		this.dataNum = document.createElement("div");
-		this.dataNum.rootInstance = this;
-		this.dataNum.id = "SVMCellsRow";
-		this.rootWindow.appendChild(this.dataNum);
+		//this.dataNum = document.createElement("div");
+		//this.dataNum.rootInstance = this;
+		//this.dataNum.id = "SVMCellsRow";
+		//this.rootWindow.appendChild(this.dataNum);
 
-		this.inputNum = document.createElement("div");
-		this.inputNum.rootInstance = this;
-		this.inputNum.id = "SVMCellsCol";
-		this.rootWindow.appendChild(this.inputNum);
+		//this.inputNum = document.createElement("div");
+		//this.inputNum.rootInstance = this;
+		//this.inputNum.id = "SVMCellsCol";
+		//this.rootWindow.appendChild(this.inputNum);
 
-		this.dataNumLabel = document.createElement("div");
-		this.dataNumLabel.innerHTML = "training data";
-		this.dataNumLabel.id = "SVMTrainDataNumLabel";
-		this.rootWindow.appendChild(this.dataNumLabel);
+		//this.dataNumLabel = document.createElement("div");
+		//this.dataNumLabel.innerHTML = "training data";
+		//this.dataNumLabel.id = "SVMTrainDataNumLabel";
+		//this.rootWindow.appendChild(this.dataNumLabel);
 
-		this.inputNumLabel = document.createElement("div");
-		this.inputNumLabel.innerHTML = "input";
-		this.inputNumLabel.id = "SVMDataNumLabel";
-		this.rootWindow.appendChild(this.inputNumLabel);
+		//this.inputNumLabel = document.createElement("div");
+		//this.inputNumLabel.innerHTML = "input";
+		//this.inputNumLabel.id = "SVMDataNumLabel";
+		//this.rootWindow.appendChild(this.inputNumLabel);
 
 		// Parameter Display
 		this.parameterDispBox = document.createElement("div");
@@ -277,6 +279,8 @@ class SVM {
 	{
 		if (this.trainEnabled == 1) {
 			this.train();
+			this.timeCounter.innerHTML = this.timeCount;
+			this.timeCount += 1;
 		}
 		this.draw();
 	}
@@ -474,21 +478,21 @@ class SVM {
 			this.context.arc(
 			    this.plotOffset.x + this.plotScale * this.data[i].x[0],
 			    this.plotOffset.y - this.plotScale * this.data[i].x[1],
-			    1, 0, 2 * Math.PI, false);
+			    1.5, 0, 2 * Math.PI, false);
 			this.context.fill();
 		}
 		for (let i = 0; i < this.input.length; i++) {
-			this.context.strokeStyle = "rgb(0, 0, 255)";
+			this.context.strokeStyle = "rgb(64,64,255)";
 			this.context.beginPath();
 			this.context.arc(
 			    this.plotOffset.x + this.plotScale * this.input[i].x[0],
 			    this.plotOffset.y - this.plotScale * this.input[i].x[1],
-			    1, 0, 2 * Math.PI, false);
+			    1.5, 0, 2 * Math.PI, false);
 			this.context.stroke();
 		}
 		// Draw circle on Support Vectors
 		for (let i = 0; i < this.supportVectors.length; i++) {
-			this.context.strokeStyle = "rgb(255, 255, 0)";
+			this.context.strokeStyle = "rgb(255,255,0)";
 			this.context.beginPath();
 			this.context.arc(
 			    this.plotOffset.x + this.plotScale * this.data[this.supportVectors[i]].x[0],
